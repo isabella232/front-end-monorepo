@@ -1,13 +1,10 @@
-import { panoptes } from '@zooniverse/panoptes-js'
 import { Modal, SpacedText } from '@zooniverse/react-components'
 import { debounce } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Box, DataTable, Heading, Paragraph } from 'grommet'
 
-const API_HOST = 'http://localhost:3000/search'
-const env = 'production'
-const page_size = 100
+import { columns, fetchRows, fetchSubjects, searchParams } from './helpers'
 
 /*
   Grommet is opinionated about line-height and links it to font-size.
@@ -33,69 +30,7 @@ const SubjectDataTable = styled(DataTable)`
   }
 `
 
-async function fetchSubjects(subjectSetID, query='', sortField='subject_id', sortOrder='asc') {
-  const response = await fetch(`${API_HOST}/${subjectSetID}?${query}&limit=${page_size}&sort_field=${sortField}&sort_order=${sortOrder}`)
-  const results = await response.json()
-  return results
-}
-
-async function fetchRows(subjects, workflow) {
-  const subject_ids = subjects.map(subject => subject.subject_id).join(',')
-  const retirementStatuses = await checkRetiredStatus(subject_ids, workflow)
-  const rows = subjects.map(subject => {
-    const { id, subject_id, ...fields } = subject
-    return {
-      subject_id,
-      status: retirementStatuses[subject_id],
-      ...fields
-    }
-  })
-  return rows
-}
-
-async function checkRetiredStatus(subject_ids, workflow) {
-  const workflow_id = workflow.id
-  const retirementStatuses = {}
-  const response = await panoptes
-    .get('/subject_workflow_statuses', {
-      env,
-      page_size,
-      subject_ids,
-      workflow_id
-    })
-  const { subject_workflow_statuses } = response.body
-  subject_workflow_statuses.forEach(status => {
-    const inProgress = status.classifications_count > 0 ? 'In progress' : 'Unclassified'
-    retirementStatuses[status.links.subject] = status.retired_at ? 'Retired' : inProgress
-  })
-  return retirementStatuses
-}
-
-function columns(customHeaders) {
-  const headers = ['subject_id', ...customHeaders, 'status']
-  return headers.map(header => {
-    return {
-      align: 'start',
-      header,
-      primary: (header === 'subject_id'),
-      property: header,
-      search: customHeaders.includes(header),
-      size: (header === 'status') ? 'xsmall' : 'small',
-      sortable: true
-    }
-  })
-}
-
-function searchParams(data) {
-  let query = ''
-  Object.entries(data).forEach(([key, value]) => {
-    if (value !== '') {
-      query += `@${key}:${value}*`
-    }
-  })
-  const urlParams = (query !== '') ? `filter_field=${query}` : ''
-  return urlParams
-}
+const PAGE_SIZE = 100
 
 export default function SubjectPicker({ subjectSet, workflow }) {
   const [ active, setActive ] = useState(true)
@@ -107,8 +42,8 @@ export default function SubjectPicker({ subjectSet, workflow }) {
   const customHeaders = ['date', 'title', 'creators']
 
   async function fetchSubjectData() {
-    const subjects = await fetchSubjects(subjectSet.id, query, sortField, sortOrder)
-    const rows = await fetchRows(subjects, workflow)
+    const subjects = await fetchSubjects(subjectSet.id, query, sortField, sortOrder, PAGE_SIZE)
+    const rows = await fetchRows(subjects, workflow, PAGE_SIZE)
     setRows(rows)
   }
 
@@ -198,7 +133,7 @@ export default function SubjectPicker({ subjectSet, workflow }) {
           pin
           replace
           sortable
-          step={page_size}
+          step={PAGE_SIZE}
         />
       </Box>
     </Modal>
