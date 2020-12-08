@@ -12,6 +12,10 @@ import { columns, fetchRows, fetchSubjects, searchParams } from './helpers'
   the tops and bottoms of the letters (without changing the text size.)
   https://matthiasott.com/notes/the-thing-with-leading-in-css
 */
+
+const StyledBox = styled(Box)`
+  min-height: 30px;
+`
 const StyledHeading = styled(Heading)`
   line-height: 100%;
 `
@@ -101,7 +105,7 @@ export default function SubjectPicker({ subjectSet, workflow }) {
       >
         Sort list by clicking column names. You will see subjects sequentially, starting with the one you choose.
       </Paragraph>
-      <Box
+      <StyledBox
         background='brand'
         fill
         pad={{
@@ -122,20 +126,20 @@ export default function SubjectPicker({ subjectSet, workflow }) {
             {subjectSet.title}
           </SpacedText>
         </Paragraph>
-        <SubjectDataTable
-          background={background}
-          columns={columns(customHeaders)}
-          data={rows}
-          fill
-          onSearch={debounce(search, 500)}
-          onSort={sort}
-          pad={pad}
-          pin
-          replace
-          sortable
-          step={PAGE_SIZE}
-        />
-      </Box>
+      </StyledBox>
+      <SubjectDataTable
+        background={background}
+        columns={columns(customHeaders)}
+        data={rows}
+        fill
+        onSearch={debounce(search, 500)}
+        onSort={sort}
+        pad={pad}
+        pin
+        replace
+        sortable
+        step={PAGE_SIZE}
+      />
     </Modal>
   )
 }
