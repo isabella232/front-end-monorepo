@@ -36,8 +36,7 @@ const SubjectDataTable = styled(DataTable)`
 
 const PAGE_SIZE = 100
 
-export default function SubjectPicker({ subjectSet, workflow }) {
-  const [ active, setActive ] = useState(true)
+export default function SubjectPicker({ active, closeFn, subjectSet, workflow }) {
   const [ rows, setRows ] = useState([])
   const [ query, setQuery ] = useState('')
   const [ sortField, setSortField ] = useState('subject_id')
@@ -89,7 +88,7 @@ export default function SubjectPicker({ subjectSet, workflow }) {
   return (
     <Modal
       active={active}
-      closeFn={e => setActive(false)}
+      closeFn={closeFn}
       headingBackground='brand'
       title={workflow.display_name}
       titleColor='neutral-6'
@@ -146,7 +145,7 @@ export default function SubjectPicker({ subjectSet, workflow }) {
 
 SubjectPicker.defaultProps = {
   active: true,
-  closeFN: e => true,
+  closeFn: e => true,
   subjectSet: {
     id: '15582',
     title: 'Anti-Slavery Letters: 1800-1839',

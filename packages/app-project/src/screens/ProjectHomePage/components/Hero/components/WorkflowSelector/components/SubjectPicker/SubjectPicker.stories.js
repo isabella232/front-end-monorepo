@@ -29,21 +29,53 @@ export default {
   decorators: [withKnobs]
 }
 
-export function Default() {
+export function Default(props) {
   return (
     <StoryContext theme={{ ...zooTheme, dark: boolean('Dark theme', false) }}>
       <SubjectPicker
+        {...props}
       />
     </StoryContext>
   )
 }
+Default.args = {
+  active: true,
+  closeFn: e => true,
+  subjectSet: {
+    id: '15582',
+    title: 'Anti-Slavery Letters: 1800-1839',
+    metadata: {
+      indexFields: 'date,title,creators'
+    }
+  },
+  workflow: {
+    id: '5329',
+    display_name: 'Transcribe Text (Main Workflow)'
+  }
+}
 
-export function Tablet() {
+export function Tablet(props) {
   return (
     <StoryContext theme={{ ...zooTheme, dark: boolean('Dark theme', false) }}>
       <SubjectPicker
+        {...props}
       />
     </StoryContext>
   )
 }
 Tablet.parameters = { viewport: { defaultViewport: 'ipad' }}
+Tablet.args = {
+  active: true,
+  closeFn: e => true,
+  subjectSet: {
+    id: '15582',
+    title: 'Anti-Slavery Letters: 1800-1839',
+    metadata: {
+      indexFields: 'date,title,creators'
+    }
+  },
+  workflow: {
+    id: '5329',
+    display_name: 'Transcribe Text (Main Workflow)'
+  }
+}
