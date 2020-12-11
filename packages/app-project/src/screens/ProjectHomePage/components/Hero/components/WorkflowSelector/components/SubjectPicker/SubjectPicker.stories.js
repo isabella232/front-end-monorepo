@@ -1,5 +1,3 @@
-import { withKnobs, boolean } from '@storybook/addon-knobs'
-import { storiesOf } from '@storybook/react'
 import zooTheme from '@zooniverse/grommet-theme'
 import { Grommet } from 'grommet'
 import React from 'react'
@@ -25,13 +23,13 @@ function StoryContext (props) {
 
 export default {
   title: 'Project App / Screens / Project Home / Subject Picker',
-  component: SubjectPicker,
-  decorators: [withKnobs]
+  component: SubjectPicker
 }
 
-export function Default(props) {
+export function Default(args) {
+  const { dark, ...props } = args
   return (
-    <StoryContext theme={{ ...zooTheme, dark: boolean('Dark theme', false) }}>
+    <StoryContext theme={{ ...zooTheme, dark }}>
       <SubjectPicker
         {...props}
       />
@@ -41,6 +39,7 @@ export function Default(props) {
 Default.args = {
   active: true,
   closeFn: e => true,
+  dark: false,
   subjectSet: {
     id: '15582',
     title: 'Anti-Slavery Letters: 1800-1839',
@@ -54,9 +53,10 @@ Default.args = {
   }
 }
 
-export function Tablet(props) {
+export function Tablet(args) {
+  const { dark, ...props } = args
   return (
-    <StoryContext theme={{ ...zooTheme, dark: boolean('Dark theme', false) }}>
+    <StoryContext theme={{ ...zooTheme, dark }}>
       <SubjectPicker
         {...props}
       />
@@ -67,6 +67,7 @@ Tablet.parameters = { viewport: { defaultViewport: 'ipad' }}
 Tablet.args = {
   active: true,
   closeFn: e => true,
+  dark: false,
   subjectSet: {
     id: '15582',
     title: 'Anti-Slavery Letters: 1800-1839',
