@@ -51,6 +51,27 @@ describe('Model > TranscriptionTask', function () {
     expect(textSubtask.taskKey).to.equal('T3.0.0')
   })
 
+  describe('Views > defaultAnnotation', function () {
+    let task
+
+    before(function () {
+      task = TranscriptionTask.TaskModel.create(transcriptionTaskSnapshot)
+    })
+
+    it('should be a valid annotation', function () {
+      const annotation = task.defaultAnnotation()
+      expect(annotation.id).to.be.ok()
+      expect(annotation.task).to.equal('T3')
+      expect(annotation.taskType).to.equal('transcription')
+    })
+
+    it('should generate unique annotations', function () {
+      const firstAnnotation = task.defaultAnnotation()
+      const secondAnnotation = task.defaultAnnotation()
+      expect(firstAnnotation.id).to.not.equal(secondAnnotation.id)
+    })
+  })
+
   describe('drawn marks', function () {
     let marks
     before(function () {
@@ -103,7 +124,7 @@ describe('Model > TranscriptionTask', function () {
     before(function () {
       task = TranscriptionTask.TaskModel.create(transcriptionTaskSnapshot)
       textSubTask = task.tools[0].tasks[0]
-      const annotation = task.defaultAnnotation
+      const annotation = task.defaultAnnotation()
       types.model('MockStore', {
         annotation: TranscriptionTask.AnnotationModel,
         task: TranscriptionTask.TaskModel
@@ -138,7 +159,7 @@ describe('Model > TranscriptionTask', function () {
 
     before(function () {
       task = TranscriptionTask.TaskModel.create(transcriptionTaskSnapshot)
-      const annotation = task.defaultAnnotation
+      const annotation = task.defaultAnnotation()
       const store = types.model('MockStore', {
         annotation: TranscriptionTask.AnnotationModel,
         task: TranscriptionTask.TaskModel
@@ -164,7 +185,7 @@ describe('Model > TranscriptionTask', function () {
 
     before(function () {
       task = TranscriptionTask.TaskModel.create(transcriptionTaskSnapshot)
-      const annotation = task.defaultAnnotation
+      const annotation = task.defaultAnnotation()
       types.model('MockStore', {
         annotation: TranscriptionTask.AnnotationModel,
         task: TranscriptionTask.TaskModel

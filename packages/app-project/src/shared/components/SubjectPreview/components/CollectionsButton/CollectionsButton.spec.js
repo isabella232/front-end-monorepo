@@ -1,6 +1,9 @@
 import { mount, shallow } from 'enzyme'
+import { Grommet } from 'grommet'
 import React from 'react'
 import sinon from 'sinon'
+import zooTheme from '@zooniverse/grommet-theme'
+import CollectionsModal from '@shared/components/CollectionsModal'
 import { MetaToolsButton } from '@zooniverse/react-components'
 import CollectionsButton from './CollectionsButton'
 import CollectionsIcon from './CollectionsIcon'
@@ -40,15 +43,24 @@ describe('Component > CollectionsButton', function () {
         <CollectionsButton
           onClick={onClick}
           subject={subject}
-        />
+        />,
+        {
+          wrappingComponent: Grommet,
+          wrappingComponentProps: { theme: zooTheme }
+        }
       )
-      collectionsModal = wrapper.find('CollectionsModalContainer').instance()
+      collectionsModal = wrapper.find(CollectionsModal).instance().wrappedInstance
       sinon.stub(collectionsModal, 'open')
+      sinon.stub(console, 'error')
     })
 
     afterEach(function () {
       collectionsModal.open.resetHistory()
       onClick.resetHistory()
+    })
+
+    after(function () {
+      console.error.restore()
     })
 
     it('should open a collections modal', function () {
@@ -73,9 +85,13 @@ describe('Component > CollectionsButton', function () {
           disabled
           onClick={onClick}
           subject={subject}
-        />
+        />,
+        {
+          wrappingComponent: Grommet,
+          wrappingComponentProps: { theme: zooTheme }
+        }
       )
-      collectionsModal = wrapper.find('CollectionsModalContainer').instance()
+      collectionsModal = wrapper.find(CollectionsModal).instance().wrappedInstance
       sinon.spy(collectionsModal, 'open')
     })
 

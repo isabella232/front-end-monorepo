@@ -70,6 +70,27 @@ describe('Model > DrawingTask', function () {
     subtasks.forEach((task, i) => expect(task.taskKey).to.equal(`T3.0.${i}`))
   })
 
+  describe('Views > defaultAnnotation', function () {
+    let task
+
+    before(function () {
+      task = DrawingTask.TaskModel.create(drawingTaskSnapshot)
+    })
+
+    it('should be a valid annotation', function () {
+      const annotation = task.defaultAnnotation()
+      expect(annotation.id).to.be.ok()
+      expect(annotation.task).to.equal('T3')
+      expect(annotation.taskType).to.equal('drawing')
+    })
+
+    it('should generate unique annotations', function () {
+      const firstAnnotation = task.defaultAnnotation()
+      const secondAnnotation = task.defaultAnnotation()
+      expect(firstAnnotation.id).to.not.equal(secondAnnotation.id)
+    })
+  })
+
   describe('drawn marks', function () {
     let marks
     before(function () {
@@ -125,7 +146,7 @@ describe('Model > DrawingTask', function () {
     before(function () {
       task = DrawingTask.TaskModel.create(drawingTaskSnapshot)
       pointSubTask = task.tools[0].tasks[1]
-      const annotation = task.defaultAnnotation
+      const annotation = task.defaultAnnotation()
       const store = types.model('MockStore', {
         annotation: DrawingTask.AnnotationModel,
         task: DrawingTask.TaskModel
@@ -178,7 +199,7 @@ describe('Model > DrawingTask', function () {
 
     before(function () {
       task = DrawingTask.TaskModel.create(drawingTaskSnapshot)
-      const annotation = task.defaultAnnotation
+      const annotation = task.defaultAnnotation()
       const store = types.model('MockStore', {
         annotation: DrawingTask.AnnotationModel,
         task: DrawingTask.TaskModel
@@ -207,7 +228,7 @@ describe('Model > DrawingTask', function () {
 
     before(function () {
       task = DrawingTask.TaskModel.create(drawingTaskSnapshot)
-      const annotation = task.defaultAnnotation
+      const annotation = task.defaultAnnotation()
       types.model('MockStore', {
         annotation: DrawingTask.AnnotationModel,
         task: DrawingTask.TaskModel
