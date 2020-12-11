@@ -42,8 +42,8 @@ export default function SubjectPicker({ subjectSet, workflow }) {
   const [ query, setQuery ] = useState('')
   const [ sortField, setSortField ] = useState('subject_id')
   const [ sortOrder, setSortOrder ] = useState('asc')
-
-  const customHeaders = ['date', 'title', 'creators']
+  const { indexFields } = subjectSet.metadata
+  const customHeaders = indexFields.split(',')
 
   async function fetchSubjectData() {
     const subjects = await fetchSubjects(subjectSet.id, query, sortField, sortOrder, PAGE_SIZE)
@@ -149,10 +149,13 @@ SubjectPicker.defaultProps = {
   closeFN: e => true,
   subjectSet: {
     id: '15582',
-    title: 'Anti-Slavery Letters: 1800-1839'
+    title: 'Anti-Slavery Letters: 1800-1839',
+    metadata: {
+      indexFields: 'date,title,creators'
+    }
   },
   workflow: {
     id: '5329',
-    display_name: 'ASM workflow 5329'
+    display_name: 'Transcribe Text (Main Workflow)'
   }
 }
