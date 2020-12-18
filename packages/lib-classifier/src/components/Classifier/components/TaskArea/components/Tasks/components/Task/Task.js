@@ -21,6 +21,7 @@ function useStores(task, stores) {
   if (!annotation) {
     annotation = classification.addAnnotation(task)
   }
+  task.setAnnotation(task)
   return {
     annotation,
     disabled
